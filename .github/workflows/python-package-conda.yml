@@ -21,6 +21,9 @@ jobs:
     - name: Create conda env
       run: |
         conda create -n build-env
+    - name: Init conda
+      run: |
+        conda init
     - name: Activate conda env
       run: |
         conda activate build-env
