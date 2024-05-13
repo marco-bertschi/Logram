@@ -61,9 +61,25 @@ Proxifier_Regex = [r'<\d+\ssec', r'([\w-]+\.)+[\w-]+(:\d+)?', r'\d{2}:\d{2}(:\d{
 # print(maxd)
 # print(maxt)
 
-doubleDictionaryList, triDictionaryList, allTokenList = dictionaryBuilder(HealthApp_format, 'TestLogs/HealthApp_2k.log', HealthApp_Regex)
-tokenMatch(allTokenList,doubleDictionaryList,triDictionaryList,15,10,'Output/HealthApp')
-f_measure, accuracy = evaluate('GroundTruth/HealthApp_2k.log_structured.csv', 'Output/HealthAppEvent.csv')
+# doubleDictionaryList, triDictionaryList, allTokenList = dictionaryBuilder(OpenSSH_format, 'TestLogs/SSH.log', OpenSSH_Regex)
+# print('built dictionary')
+# tokenMatch(allTokenList,doubleDictionaryList,triDictionaryList,47,80,'Output/OpenSSH')
+# print('done token match')
+# f_measure, accuracy = evaluate('GroundTruth/OpenSSH_2k.log_structured.csv', 'Output/OpenSSHEvent.csv')
+# print('done measuring')
+
+# doubleDictionaryList, triDictionaryList, allTokenList = dictionaryBuilder(Windows_format, 'TestLogs/Windows.log', Windows_Regex)
+# print('built dictionary')
+# tokenMatch(allTokenList,doubleDictionaryList,triDictionaryList,16,16,'Output/Windows')
+# print('done token match')
+# f_measure, accuracy = evaluate('GroundTruth/Windows_2k.log_structured.csv', 'Output/WindowsEvent.csv')
+# print('done measuring')
+
+doubleDictionaryList, triDictionaryList, allTokenList = dictionaryBuilder(Linux_format, 'TestLogs/Linux.log', Linux_Regex)
+print('built dictionary')
+tokenMatch(allTokenList,doubleDictionaryList,triDictionaryList,32,24,'Output/Linux')
+f_measure, accuracy = evaluate('GroundTruth/Linux_2k.log_structured.csv', 'Output/LinuxEvent.csv')
+print('done measuring')
 
 #We use an automatic approach to gain the threshold. The parameters listed below are suggested thresholds for different datasets.
 

@@ -5,10 +5,11 @@ def dictionaryBuilder(log_format, logFile, rex):
     doubleDictionaryList = {'dictionary^DHT': -1};
     triDictionaryList = {'dictionary^DHT^triple': -1};
     allTokenList = []
+    linecount = 0;
 
     regex = regexGenerator(log_format)
 
-    for line in open(logFile, 'r'):
+    for line in open(logFile, 'r', -1, 'utf8', 'ignore'):
         tokens = tokenSpliter(line, regex, rex)
         if(tokens == None):
             pass;
