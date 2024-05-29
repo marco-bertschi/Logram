@@ -72,8 +72,8 @@ def tokenMatch(allTokensList, doubleDictionaryList, triDictionaryList, doubleThr
         outFile.write(template_id + ',' + logEvent);
         outFile.write('\n');
 
-    templateFile.write('EventTemplate,Occurrences')
+    templateFile.write('EventTemplate,Occurrences,Hash')
     templateFile.write('\n')
     for template in templateTable.keys():
-        templateFile.write(template + ',' + str(templateTable[template]))
+        templateFile.write(template + ',' + str(templateTable[template]) + ',' + hashlib.md5(template.encode('utf-8')).hexdigest()[0:8])
         templateFile.write('\n')
