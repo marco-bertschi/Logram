@@ -42,12 +42,20 @@ def doubleMatch(tokens, indexList, doubleDictionaryList, doubleThreshold, length
                 dynamicIndex.append(index);
     return dynamicIndex
 
+def taint(token):
+    taintTokens = ['root', 'user']
+
+    return taintTokens.count(token.lower()) > 0
+
+       
+
 def tokenMatch(allTokensList, doubleDictionaryList, triDictionaryList, doubleThreshold, triThreshold, outAddress):
     templateTable = {}
+    taintTable = {}
     outFile = open(outAddress + "Event.csv", "w")
     templateFile = open(outAddress + "Template.csv", "w")
 
-    outFile.write('EventId,Event')
+    outFile.write('EventId,Event,Tainted')
     outFile.write('\n')
 
     for tokens in allTokensList:
@@ -55,7 +63,10 @@ def tokenMatch(allTokensList, doubleDictionaryList, triDictionaryList, doubleThr
         dynamicIndex = doubleMatch(tokens, indexList, doubleDictionaryList, doubleThreshold, len(tokens))
 
         logEvent = ""
+        tainted = False
         for i in range(len(tokens)):
+            tokenToCheck = tokens[i]
+            tainted = tainted or taint(tokenToCheck)
             if i in dynamicIndex:
                 tokens[i] = '<*>'
             logEvent = logEvent + tokens[i] + ' '
@@ -64,16 +75,18 @@ def tokenMatch(allTokensList, doubleDictionaryList, triDictionaryList, doubleThr
 
         if logEvent in templateTable:
             templateTable[logEvent] = templateTable[logEvent] + 1
+            taintTable[logEvent] = taintTable[logEvent] or tainted
         else:
             templateTable[logEvent] = 1
+            taintTable[logEvent] = tainted
 
         template_id = hashlib.md5(logEvent.encode('utf-8')).hexdigest()[0:8]
 
-        outFile.write(template_id + ',' + logEvent);
+        outFile.write(template_id + ',' + logEvent + ',' + str(tainted));
         outFile.write('\n');
 
-    templateFile.write('EventTemplate,Occurrences,EventId')
+    templateFile.write('EventTemplate,Occurrences,EventId,Tainted')
     templateFile.write('\n')
     for template in templateTable.keys():
-        templateFile.write(template + ',' + str(templateTable[template]) + ',' + hashlib.md5(template.encode('utf-8')).hexdigest()[0:8])
+        templateFile.write(template + ',' + str(templateTable[template]) + ',' + hashlib.md5(template.encode('utf-8')).hexdigest()[0:8] + ',' + str(taintTable[template]))
         templateFile.write('\n')
