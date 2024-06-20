@@ -10,14 +10,12 @@ re_stripper_alpha = re.compile('[^a-zA-Z]+')
 
 def similarity_ngrams(a, b):
 
-    matches = [i for i in a if i in b]
+    unionVereinigung = a.union(b);
+    intersection = a.intersection(b);
 
-    matchesLen = len(matches)
+    jci = len(intersection) / len(unionVereinigung)
 
-    if(matchesLen == 0):
-        return 0.0
-
-    return (len(a) + len(b)) * matchesLen
+    return jci
 
 
 NGRAM_SIZE = 2
@@ -36,14 +34,14 @@ print(newTemplates)
 
 for index, row in newTemplates.iterrows():
     print(row['_merge'], ' ', row['EventTemplate'])
-    ngramNew = list(nltk.ngrams(re_stripper_alpha.sub(' ', row['EventTemplate']).split(), NGRAM_SIZE))
+    ngramNew = set(nltk.ngrams(re_stripper_alpha.sub(' ', row['EventTemplate']).split(), NGRAM_SIZE))
     levenshtein_factor = 999999;
     similarity = 0.0
     for indexOldTemplate, rowOldTemplate in oldTemplateFile.iterrows():
         levenshtein = lev(row[0], rowOldTemplate[0]);
         size_diff = (len(rowOldTemplate[0]) - len(row[0])) + -1
         new_levenshtein_factor = levenshtein * size_diff
-        ngramOld = list(nltk.ngrams(re_stripper_alpha.sub(' ', rowOldTemplate[0]).split(), NGRAM_SIZE))
+        ngramOld = set(nltk.ngrams(re_stripper_alpha.sub(' ', rowOldTemplate[0]).split(), NGRAM_SIZE))
 
         newSimilarity = similarity_ngrams(ngramNew,ngramOld)
 
@@ -62,4 +60,5 @@ for index, row in newTemplates.iterrows():
 
 
 print(newTemplates);
+newTemplates.to_csv('/home/marcobertschi/Logram/Logram/Levenshtein/diff.csv');
 
